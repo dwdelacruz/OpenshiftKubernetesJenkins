@@ -1,9 +1,12 @@
-FROM jenkins:1.609.3
-USER root
-RUN echo "deb http://apt.dockerproject.org/repo debian-jessie main" \ > /etc/apt/sources.list.d/docker.list \
-&& apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 \ --recv-keys 58118E89F3A912897C070ADBF76221572C52609D \
-&& apt-get update \
-&& apt-get install -y apt-transport-https \ && apt-get install -y sudo \
-&& apt-get install -y docker-engine \
-&& rm -rf /var/lib/apt/lists/*
-RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers USER jenkins
+# this shows how we can extend/change an existing official image from Docker Hub
+
+FROM nginx:latest
+# highly recommend you always pin versions for anything beyond dev/learn
+
+WORKDIR /usr/share/nginx/html
+# change working directory to root of nginx webhost
+# using WORKDIR is preferred to using 'RUN cd /some/path'
+
+COPY index.html index.html
+
+# I don't have to specify EXPOSE or CMD because they're in my FROM
